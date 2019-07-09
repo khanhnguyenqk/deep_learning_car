@@ -1,5 +1,6 @@
 name: deep_car
 channels:
+  - pytorch
   - defaults
 dependencies:
   - _ipyw_jlab_nb_ext_conf=0.1.0=py36_0
@@ -27,8 +28,8 @@ dependencies:
   - boto=2.49.0=py36_0
   - bottleneck=1.2.1=py36h452e1ab_1
   - bzip2=1.0.6=hfa6e2cd_5
-  - ca-certificates=2019.1.23=0
-  - certifi=2019.3.9=py36_0
+  - ca-certificates=2019.5.15=0
+  - certifi=2019.6.16=py36_0
   - cffi=1.12.3=py36h7a1dbc1_0
   - chardet=3.0.4=py36_1
   - click=7.0=py36_0
@@ -40,6 +41,7 @@ dependencies:
   - console_shortcut=0.1.1=3
   - contextlib2=0.5.5=py36he5d52c0_0
   - cryptography=2.6.1=py36h7a1dbc1_0
+  - cudatoolkit=9.0=1
   - curl=7.64.1=h2a8f88b_0
   - cycler=0.10.0=py36h009560c_0
   - cython=0.29.7=py36ha925a31_0
@@ -131,6 +133,7 @@ dependencies:
   - nbconvert=5.4.1=py36_3
   - nbformat=4.4.0=py36h3a5bc1b_0
   - networkx=2.3=py_0
+  - ninja=1.9.0=py36h74a9793_0
   - nltk=3.4.1=py36_0
   - nose=1.3.7=py36_2
   - notebook=5.7.8=py36_0
@@ -141,7 +144,7 @@ dependencies:
   - numpydoc=0.9.1=py_0
   - olefile=0.46=py36_0
   - openpyxl=2.6.2=py_0
-  - openssl=1.1.1b=he774522_1
+  - openssl=1.1.1c=he774522_1
   - packaging=19.0=py36_0
   - pandas=0.24.2=py36ha925a31_0
   - pandoc=2.2.3.2=0
@@ -189,6 +192,7 @@ dependencies:
   - python=3.6.8=h9f7ef89_7
   - python-dateutil=2.8.0=py36_0
   - python-libarchive-c=2.8=py36_6
+  - pytorch=1.1.0=py3.6_cuda90_cudnn7_1
   - pytz=2019.1=py_0
   - pywavelets=1.0.3=py36h8c2d366_1
   - pywin32=223=py36hfa6e2cd_1
@@ -237,6 +241,7 @@ dependencies:
   - testpath=0.4.2=py36_0
   - tk=8.6.8=hfa6e2cd_0
   - toolz=0.9.0=py36_0
+  - torchvision=0.3.0=py36_cu90_1
   - tornado=6.0.2=py36he774522_0
   - tqdm=4.31.1=py36_1
   - traitlets=4.3.2=py36h096827d_0
