@@ -22,9 +22,14 @@ def main():
     raceTrack.addWallByFloats([(600, 10), (600, 400)])
     raceTrack.addWallByFloats([(600, 400), (10, 400)])
 
-    car = Car((100, 100), 0, 0, speed=1)
-    raceTrack.addCar(car)
+    raceTrack.addCar(Car((100, 100), 0, 0, size=(10, 15), speed=1))
+    raceTrack.addCar(Car((100, 50), 0, 1, size=(10, 15), speed=2))
+    raceTrack.addCar(Car((100, 150), 0, 2, size=(10, 15), speed=3))
     raceTrack.startRace(space)
+
+    segmentBody = pymunk.Body()
+    segment = pymunk.Segment(segmentBody, (100, 100), (200, 200), 0.0)
+    space.add(segment)
 
     running = True
     while running:
@@ -35,6 +40,8 @@ def main():
 
         for c in raceTrack.cars:
             c.move()
+        
+        segmentBody.position += Vec2d(5, 0)
 
         ### Clear screen
         screen.fill(pygame.color.THECOLORS["black"])

@@ -2,10 +2,9 @@ from pymunk import Body, Vec2d
 import pymunk
 
 class Car(Body):
-    def __init__(self, position, angle, id, speed=2):
+    def __init__(self, position, angle, id, speed=2, size=(20,30)):
         self.id = id
-        w = 40
-        l = 60
+        w, l = size
         vs = [(0, -w/2), (w, -w/2), (l, 0), (w, w/2), (0, w/2)]
         mass = 0
         moment = pymunk.moment_for_poly(mass, vs)
@@ -34,6 +33,6 @@ class Car(Body):
 
     @staticmethod
     def post_solve_car_hit(arbiter, space, data):
-        a, b = arbiter.shapes
+        _, b = arbiter.shapes
         car = b.body
         car.can_run = False
