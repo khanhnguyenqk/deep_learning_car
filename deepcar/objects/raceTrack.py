@@ -1,7 +1,8 @@
-from pymunk import Segment, Space
+from pymunk import Space
 from typing import Tuple, List
 import pymunk
 from .car import Car
+from .wall import Wall
 import pygame
 
 class RaceTrack:
@@ -11,22 +12,21 @@ class RaceTrack:
         self.startingPoint = (0, 0)
         self.cars = []
 
-    def addWall(self, wall:Segment)->None:
+    def addWall(self, wall:Wall)->None:
         self.walls.append(wall)
 
     def addWallByFloats(self, wallEnds:List[Tuple[float, float]])->None:
-        body = pymunk.Body(body_type=pymunk.Body.STATIC)
-        segment = Segment(body, wallEnds[0], wallEnds[1], 0.0)
-        self.walls.append(segment)
+        wall = Wall(wallEnds[0], wallEnds[1])
+        self.walls.append(wall)
 
     def addCar(self, car:Car):
         self.cars.append(car)
 
     def startRace(self, space:Space):
         for w in self.walls:
-            w.friction = 1
-            w.group = 1
-        space.add(self.walls)
+            w.shape.friction = 1
+            w.shape.group = 1
+            space.add(w.shape)
 
         for c in self.cars:
             space.add(c.shape)

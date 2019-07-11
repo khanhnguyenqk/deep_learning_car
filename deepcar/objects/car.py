@@ -1,5 +1,6 @@
 from pymunk import Body, Vec2d
 import pymunk
+from .wall import Wall
 
 class Car(Body):
     def __init__(self, position, angle, id, speed=2, size=(20,30)):
@@ -33,6 +34,10 @@ class Car(Body):
 
     @staticmethod
     def post_solve_car_hit(arbiter, space, data):
-        _, b = arbiter.shapes
+        a, b = arbiter.shapes
+        wall = a.body
+        if not isinstance(wall, Wall):
+            return
+        b.collision_type = 0
         car = b.body
         car.can_run = False
