@@ -7,7 +7,7 @@ import pygame
 
 class RaceTrack:
     def __init__(self, size=(1000, 500)):
-        self.walls = [] # list of Segments
+        self.walls = [] # list of Walls
         self.size = size # race track size
         self.startingPoint = (0, 0)
         self.cars = []
@@ -29,7 +29,7 @@ class RaceTrack:
             space.add(w.shape)
 
         for c in self.cars:
-            space.add(c.shape)
+            c.addSelfToSpace(space)
 
         handler = space.add_collision_handler(0, 1)
         handler.post_solve=Car.post_solve_car_hit

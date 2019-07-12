@@ -1,9 +1,10 @@
-from deepcar import Car, RaceTrack
+from deepcar import Car, RaceTrack, RadarSensor
 import sys
 
 import pygame
 from pygame.locals import *
 from pygame.color import *
+import math
     
 import pymunk
 from pymunk.vec2d import Vec2d
@@ -22,15 +23,11 @@ def main():
     raceTrack.addWallByFloats([(600, 10), (600, 400)])
     raceTrack.addWallByFloats([(600, 400), (10, 400)])
 
-    raceTrack.addCar(Car((100, 100), 0, 0, size=(10, 15), speed=1))
-    raceTrack.addCar(Car((100, 50), 0, 1, size=(10, 15), speed=2))
-    raceTrack.addCar(Car((100, 150), 0, 2, size=(10, 15), speed=3))
+    raceTrack.addCar(Car((100, 100), 0, 0, raceTrack, size=(10, 15), speed=1))
+    """ raceTrack.addCar(Car((100, 50), 0, 1, size=(10, 15), speed=2))
+    raceTrack.addCar(Car((100, 150), 0, 2, size=(10, 15), speed=3)) """
     raceTrack.startRace(space)
-
-    segmentBody = pymunk.Body()
-    segment = pymunk.Segment(segmentBody, (100, 100), (200, 200), 0.0)
-    space.add(segment)
-
+    
     running = True
     while running:
         for event in pygame.event.get():
@@ -40,9 +37,12 @@ def main():
 
         for c in raceTrack.cars:
             c.move()
-        
-        segmentBody.position += Vec2d(5, 0)
+            c.steered(math.radians(0.1))
 
+        sensors = [s for c in raceTrack.cars for s in c.sensors]
+        radarPoints = [s.point for s in sensors if s.point]
+        radarPointShapes = 
+        
         ### Clear screen
         screen.fill(pygame.color.THECOLORS["black"])
         
