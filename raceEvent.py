@@ -34,17 +34,19 @@ def main():
             if event.type == QUIT or \
                 event.type == KEYDOWN and (event.key in [K_ESCAPE, K_q]):  
                 running = False
+              
+        ### Clear screen
+        screen.fill(pygame.color.THECOLORS["black"])
 
         for c in raceTrack.cars:
             c.move()
             c.steered(math.radians(0.1))
 
         sensors = [s for c in raceTrack.cars for s in c.sensors]
-        radarPoints = [s.point for s in sensors if s.point]
-        radarPointShapes = 
-        
-        ### Clear screen
-        screen.fill(pygame.color.THECOLORS["black"])
+        radarPoints = [tuple(s.point) for s in sensors if s.point]
+        for p in radarPoints:
+            p = int(round(p[0])), raceTrack.size[1]-int(round(p[1]))
+            pygame.draw.circle(screen, (0, 0, 255), p, 5)
         
         ### Draw stuff
         space.debug_draw(draw_options)
