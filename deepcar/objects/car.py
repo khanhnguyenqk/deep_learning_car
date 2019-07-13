@@ -5,7 +5,7 @@ from .radarSensor import RadarSensor
 import math
 
 class Car(Body):
-    def __init__(self, position, angle, id, raceTrack, speed=2, size=(20,30)):
+    def __init__(self, position, angle, id, raceTrack, speed=0.5, size=(20,30)):
         self.id = id
         w, l = size
         vs = [(0, -w/2), (w, -w/2), (l, 0), (w, w/2), (0, w/2)]

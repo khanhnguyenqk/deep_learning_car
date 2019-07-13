@@ -1,4 +1,4 @@
-from deepcar import Car, RaceTrack, RadarSensor
+from objects import Car, RaceTrack, RadarSensor
 import sys
 
 import pygame
@@ -23,9 +23,9 @@ def main():
     raceTrack.addWallByFloats([(600, 10), (600, 400)])
     raceTrack.addWallByFloats([(600, 400), (10, 400)])
 
-    raceTrack.addCar(Car((100, 100), 0, 0, raceTrack, size=(10, 15), speed=1))
-    """ raceTrack.addCar(Car((100, 50), 0, 1, size=(10, 15), speed=2))
-    raceTrack.addCar(Car((100, 150), 0, 2, size=(10, 15), speed=3)) """
+    raceTrack.addCar(Car((100, 100), 0, 0, raceTrack, size=(10, 15), speed=0.5))
+    raceTrack.addCar(Car((100, 50), 0, 1, raceTrack, size=(10, 15), speed=0.7))
+    raceTrack.addCar(Car((100, 150), 0, 2, raceTrack, size=(10, 15), speed=0.3))
     raceTrack.startRace(space)
     
     running = True
@@ -40,7 +40,7 @@ def main():
 
         for c in raceTrack.cars:
             c.move()
-            c.steered(math.radians(0.1))
+            c.steered(math.radians(0.05))
 
         sensors = [s for c in raceTrack.cars for s in c.sensors]
         radarPoints = [tuple(s.point) for s in sensors if s.point]
