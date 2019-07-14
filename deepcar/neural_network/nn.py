@@ -112,8 +112,6 @@ def _test_mutate_with_probs():
 
 def _test_mutate_nparray_with_probs():
     a = np.array([float(x) for x in range(20)]).reshape((4, 5))
-    f = lambda x:x + 1
-    v = np.vectorize(NN.mutate_with_probs)
     NN._mutate_nparray_with_probs(a, [0.2] * 4, [NN.flip, NN.rand, NN.rand_increase_pct, NN.rand_deduct_pct])
     print(a)
 
