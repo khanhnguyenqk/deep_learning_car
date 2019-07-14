@@ -2,6 +2,7 @@ from typing import List
 import numpy as np
 from itertools import accumulate
 import random
+import math
 
 class NN:
     def __init__(self, x_cnt:int, y_cnt:int, hidden_cnts:List[int]):
@@ -28,7 +29,8 @@ class NN:
         layer = np.random.normal(scale=random_scale, size=(self.hidden_cnts[-1]+1, self.y_cnt))
         self.hiddens.append(layer)
 
-    def sigmoid(self, x):
+    @staticmethod
+    def sigmoid(x):
         return 1 / (1 + np.exp(-x))
 
     def forward(self, xs:List[float])->List[float]:
@@ -37,8 +39,15 @@ class NN:
         output = np.asarray(xs)
         for hidden in self.hiddens:
             output = np.append(output, [1])
-            output = self.sigmoid(np.dot(output, hidden))
+            output = NN.sigmoid(np.dot(output, hidden))
+        output = NN.softmax(output)
         return output.tolist()
+
+    @staticmethod
+    def softmax(x):
+        e_power = np.power(math.e, x)
+        denominator = e_power.sum()
+        return e_power / denominator
 
     def deep_copy(self, seed=None):
         '''
@@ -117,4 +126,4 @@ def _test_mutate_nparray_with_probs():
 
 if __name__ == '__main__':
     _test_forward_no_exception()
-    _test_mutate_with_probs()
+    #_test_mutate_with_probs()

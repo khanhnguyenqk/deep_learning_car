@@ -1,6 +1,5 @@
 from typing import Tuple, List
-import pymunk
-import pygame
+import pymunk, pygame
 from pymunk import Body, Vec2d, Space, Segment
 import math
 
@@ -10,10 +9,10 @@ class Wall(Body):
         self.shape = Segment(self, a, b, 0.0)
         self.shape.collision_type = 0
 
-
+degree = math.radians(2)
 
 class Car(Body):
-    def __init__(self, position, angle, id, raceTrack, speed=0.5, size=(20,30)):
+    def __init__(self, position, angle, id, raceTrack, speed=0.1, size=(20,30), steermax=degree):
         self.id = id
         w, l = size
         vs = [(0, -w/2), (w, -w/2), (l, 0), (w, w/2), (0, w/2)]
@@ -30,6 +29,8 @@ class Car(Body):
         self.angle = angle
         self.position = position
         self.sensors = list(self.createSensors(raceTrack))
+        self.nn = None
+        self.steermax = steermax
 
     def createSensors(self, raceTrack):
         sensorAngles = [60, 30, 0, -30, -60]
@@ -39,6 +40,12 @@ class Car(Body):
     def move(self):
         if not self.can_run:
             return
+        if self.nn:
+            xs = self.get_scaled_radar_distances()
+            ys = self.nn.forward(xs)
+            steer_delta = (ys[0] - 0.5) / 0.5 * self.steermax
+            self.steered(steer_delta)
+
         impulse = self.speed * Vec2d(1, 0)
         impulse.rotate(self.angle)
         self.position += impulse
@@ -56,8 +63,10 @@ class Car(Body):
         space.add(self.shape)
 
     def assign_nn(self, nn):
-        pass
+        self.nn = nn
 
+    def get_scaled_radar_distances(self)->List[float]:
+        return [x.get_distance() / x.range for x in self.sensors]
 
     @staticmethod
     def post_solve_car_hit(arbiter, space, data):
@@ -87,7 +96,7 @@ class RaceTrack:
     def addCar(self, car):
         self.cars.append(car)
 
-    def startRace(self, space:Space):
+    def addSelfToSpace(self, space:Space):
         for w in self.walls:
             w.shape.friction = 1
             w.shape.group = 1
@@ -154,24 +163,31 @@ class RadarSensor:
         obstacles.sort(key=lambda x: (x - self.root).length)
         self.point = obstacles[0]
 
-def _test_get_distance():
+def _test_Radar_get_distance():
+    space = pymunk.Space()
+    
     raceTrack = RaceTrack()
     raceTrack.addWallByFloats([(100, 10), (100, -10)])
+    raceTrack.addSelfToSpace(space)
+
     radar = RadarSensor((0, 0), 0, raceTrack)
     radar.updateObstaclePoint()
-    print(radar.get_distance)
 
-if __name__ == '__main__':
-    import sys
-    from pathlib import Path # if you haven't already done so
-    file = Path(__file__).resolve()
-    parent, root = file.parent, file.parents[1]
-    sys.path.append(str(root))
+    print(radar.get_distance())
+
+def _test_Car_get_scaled_radar_distances():
+    space = pymunk.Space()
     
-    _test_get_distance()
+    raceTrack = RaceTrack()
+    raceTrack.addWallByFloats([(100, 100), (100, -100)])
+    raceTrack.addSelfToSpace(space)
 
-    # Additionally remove the current file's directory from sys.path
-    try:
-        sys.path.remove(str(parent))
-    except ValueError: # Already removed
-        pass
+    car = Car((0, 0), 0, 0, raceTrack)
+    car.addSelfToSpace(space)
+    car.move()
+
+    print(car.get_scaled_radar_distances())
+
+if __name__ == '__main__':    
+    _test_Radar_get_distance()
+    _test_Car_get_scaled_radar_distances()
