@@ -13,6 +13,7 @@ def getArgParse()->argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description='UI to create race track.')
     parser.add_argument('--w', type=int, help='width of the race track', default=1500)
     parser.add_argument('--h', type=int, help='width of the race track', default=800)
+    parser.add_argument('--f', type=str, help='continue working on a race track', default=None)
     return parser
 
 def main():
@@ -32,6 +33,9 @@ def main():
     line_point1 = None
 
     raceDict = {'w':w, 'h':h, 'walls':[], 'starting_point':None, 'finish_lines':[]}
+    if args.f:
+        with open(args.f, 'r') as file:
+            raceDict = json.load(file)
 
     while running:
         for event in pygame.event.get():

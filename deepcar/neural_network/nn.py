@@ -49,7 +49,7 @@ class NN:
         denominator = e_power.sum()
         return e_power / denominator
 
-    def deep_copy(self, seed=None):
+    def deep_copy(self):
         '''
         Return a deep copy of self
         '''
@@ -61,9 +61,10 @@ class NN:
         '''
         Randomly mutate weights and biases, inplace.
         '''
-        probs = [0.02] * 4
+        probs = [0.01] * 4
         mutation_functions = [NN.flip, NN.rand, NN.rand_increase_pct, NN.rand_deduct_pct]
-        NN._mutate_nparray_with_probs(self.hiddens, probs, mutation_functions)
+        for hidden in self.hiddens:
+            NN._mutate_nparray_with_probs(hidden, probs, mutation_functions)
 
     @staticmethod
     def _mutate_nparray_with_probs(a, probs:List[float], mutation_functions, seed=None):
