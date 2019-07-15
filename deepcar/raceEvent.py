@@ -16,6 +16,8 @@ def main():
     CAR_SPEED = 0.6
     CAR_STEER_MAX = math.radians(24)
     RADAR_RANGE = 500
+    NN_MUTATION_PROB_MIN = 0.01
+    NN_MUTATION_PROB_MAX = 0.06
 
     # Put window at position (0, 0) of the monitor
     os.environ['SDL_VIDEO_WINDOW_POS'] = "10,10"
@@ -48,19 +50,20 @@ def main():
                 raceTrack.addCar(car)
         else:
             best_car = next(iter(raceTrack.best_cars))
+            fit_score = (raceTrack.best_line_crossed + 1) / len(raceTrack.finish_lines)
             nn = best_car.nn
 
             raceTrack.clearCars()
 
-            for i in range(CARS_PER_LAP-1):
+            for i in range(CARS_PER_LAP):
                 new_nn = nn.deep_copy()
-                new_nn.mutate_randomly()
+                new_nn.mutate_randomly(intensity=1-fit_score, min_prob=NN_MUTATION_PROB_MIN, max_prob=NN_MUTATION_PROB_MAX)
                 car = Car((100, 150), 0, i, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX)
                 car.assign_nn(new_nn)
                 raceTrack.addCar(car)
-            car = Car((100, 150), 0, i+1, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX)
+            """ car = Car((100, 150), 0, i+1, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX)
             car.assign_nn(nn)
-            raceTrack.addCar(car)
+            raceTrack.addCar(car) """
         raceTrack.init_race()
 
         quit = False

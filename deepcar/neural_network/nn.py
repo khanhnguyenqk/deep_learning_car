@@ -57,11 +57,14 @@ class NN:
         copy.hiddens = [np.copy(h) for h in self.hiddens]
         return copy
 
-    def mutate_randomly(self):
+    def mutate_randomly(self, intensity=1, min_prob=0.02, max_prob=0.06):
         '''
         Randomly mutate weights and biases, inplace.
+        
+        INPUT
+            intensity (float): in range [0, 1]. Mutation prob = min_prob + intensity * (max_prob - min_prob)
         '''
-        probs = [0.03] * 4
+        probs = [min_prob + intensity * (max_prob - min_prob)] * 4
         mutation_functions = [NN.flip, NN.rand, NN.rand_increase_pct, NN.rand_deduct_pct]
         for hidden in self.hiddens:
             NN._mutate_nparray_with_probs(hidden, probs, mutation_functions)
