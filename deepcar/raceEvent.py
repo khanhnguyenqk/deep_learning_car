@@ -10,7 +10,7 @@ from pymunk.vec2d import Vec2d
 import pymunk.pygame_util
 
 def main():
-    CARS_PER_LAP = 20
+    CARS_PER_LAP = 40
     DRAW_SENSORS = True
     LAP_CNT = 1000
     CAR_SPEED = 0.6

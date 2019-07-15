@@ -61,7 +61,7 @@ class NN:
         '''
         Randomly mutate weights and biases, inplace.
         '''
-        probs = [0.02] * 4
+        probs = [0.03] * 4
         mutation_functions = [NN.flip, NN.rand, NN.rand_increase_pct, NN.rand_deduct_pct]
         for hidden in self.hiddens:
             NN._mutate_nparray_with_probs(hidden, probs, mutation_functions)
