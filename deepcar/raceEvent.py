@@ -1,4 +1,5 @@
 from objects import Car, RaceTrack, RadarSensor
+from neural_network import NN
 import sys
 
 import pygame
@@ -23,10 +24,14 @@ def main():
     raceTrack.addWallByFloats([(600, 10), (600, 400)])
     raceTrack.addWallByFloats([(600, 400), (10, 400)])
 
-    raceTrack.addCar(Car((100, 100), 0, 0, raceTrack, size=(10, 15), speed=0.5))
-    raceTrack.addCar(Car((100, 50), 0, 1, raceTrack, size=(10, 15), speed=0.7))
-    raceTrack.addCar(Car((100, 150), 0, 2, raceTrack, size=(10, 15), speed=0.3))
-    raceTrack.startRace(space)
+    """ raceTrack.addCar(Car((100, 100), 0, 0, raceTrack, size=(10, 15), speed=0.5))
+    raceTrack.addCar(Car((100, 50), 0, 1, raceTrack, size=(10, 15), speed=0.7)) """
+    car = Car((100, 150), 0, 2, raceTrack, size=(10, 15), speed=0.3)
+    nn = NN(len(car.sensors), 2, [10, 10])
+    nn.randomize_weights_biases()
+    car.assign_nn(nn)
+    raceTrack.addCar(car)
+    raceTrack.addSelfToSpace(space)
     
     running = True
     while running:
@@ -40,7 +45,7 @@ def main():
 
         for c in raceTrack.cars:
             c.move()
-            c.steered(math.radians(0.05))
+            #c.steered(math.radians(0.05))
 
         sensors = [s for c in raceTrack.cars for s in c.sensors]
         radarPoints = [tuple(s.point) for s in sensors if s.point]

@@ -1,4 +1,2 @@
-from .objects.car import Car
-from .objects.raceTrack import RaceTrack
-from .objects.wall import Wall
-from .objects.radarSensor import RadarSensor
+from .objects import RadarSensor, Wall, RaceTrack, Car
+from .neural_network import NN
