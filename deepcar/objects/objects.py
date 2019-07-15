@@ -55,7 +55,7 @@ class Car(Body):
         return NotImplemented
 
     def createSensors(self, raceTrack, range):
-        sensorAngles = [90, 45, 0, -45, -90]
+        sensorAngles = [45, 0, -45]
         for a in sensorAngles:
             yield RadarSensor(self.position, math.radians(a), raceTrack, range=range)
 

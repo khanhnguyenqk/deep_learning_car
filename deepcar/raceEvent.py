@@ -10,11 +10,11 @@ from pymunk.vec2d import Vec2d
 import pymunk.pygame_util
 
 def main():
-    CARS_PER_LAP = 40
+    CARS_PER_LAP = 50
     DRAW_SENSORS = True
     LAP_CNT = 1000
     CAR_SPEED = 0.6
-    CAR_STEER_MAX = math.radians(8)
+    CAR_STEER_MAX = math.radians(24)
     RADAR_RANGE = 500
 
     # Put window at position (0, 0) of the monitor
@@ -42,7 +42,7 @@ def main():
         if lap == 0:
             for i in range(CARS_PER_LAP):
                 car = Car((100, 150), 0, i, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX, radar_range=RADAR_RANGE)
-                nn = NN(len(car.sensors), 2, [16, 8, 8])
+                nn = NN(len(car.sensors), 2, [8, 8])
                 nn.randomize_weights_biases()
                 car.assign_nn(nn)
                 raceTrack.addCar(car)
