@@ -10,11 +10,12 @@ from pymunk.vec2d import Vec2d
 import pymunk.pygame_util
 
 def main():
-    CARS_PER_LAP = 10
-    DRAW_SENSORS = False
+    CARS_PER_LAP = 50
+    DRAW_SENSORS = True
     LAP_CNT = 1000
     CAR_SPEED = 0.6
-    CAR_STEER_MAX = math.radians(4)
+    CAR_STEER_MAX = math.radians(24)
+    RADAR_RANGE = 500
 
     # Put window at position (0, 0) of the monitor
     os.environ['SDL_VIDEO_WINDOW_POS'] = "10,10"
@@ -40,8 +41,8 @@ def main():
         # Add cars and NNs
         if lap == 0:
             for i in range(CARS_PER_LAP):
-                car = Car((100, 150), 0, i, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX)
-                nn = NN(len(car.sensors), 2, [10, 10])
+                car = Car((100, 150), 0, i, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX, radar_range=RADAR_RANGE)
+                nn = NN(len(car.sensors), 2, [8, 8])
                 nn.randomize_weights_biases()
                 car.assign_nn(nn)
                 raceTrack.addCar(car)
@@ -63,11 +64,15 @@ def main():
         raceTrack.init_race()
 
         quit = False
-        while not raceTrack.isRaceFinished() and not quit:
+        manual_next_lap = False
+        while ((not raceTrack.isRaceFinished() or lap == LAP_CNT-1) 
+            and not quit and not manual_next_lap):
             for event in pygame.event.get():
                 if event.type == QUIT or \
                     event.type == KEYDOWN and (event.key in [K_ESCAPE, K_q]):  
                     quit = True
+                if event.type == KEYDOWN and event.key == K_n:
+                    manual_next_lap = True
                 
             ### Clear screen
             screen.fill(pygame.color.THECOLORS["white"])

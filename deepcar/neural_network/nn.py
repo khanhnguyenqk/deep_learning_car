@@ -61,7 +61,7 @@ class NN:
         '''
         Randomly mutate weights and biases, inplace.
         '''
-        probs = [0.01] * 4
+        probs = [0.03] * 4
         mutation_functions = [NN.flip, NN.rand, NN.rand_increase_pct, NN.rand_deduct_pct]
         for hidden in self.hiddens:
             NN._mutate_nparray_with_probs(hidden, probs, mutation_functions)
@@ -93,13 +93,12 @@ class NN:
         n = len(probs)
         if n != len(mutation_functions):
             raise Exception('len(probs) != len(mutation_functions)')
-        accum_probs = list(accumulate(probs))
 
         random.seed(seed)
-        r = random.random()
-        for i, p in enumerate(accum_probs):
+        for i, p in enumerate(probs):
+            r = random.random()
             if r <= p:
-                return mutation_functions[i](x)
+                x = mutation_functions[i](x)
         return x
 
     flip = lambda x:-x

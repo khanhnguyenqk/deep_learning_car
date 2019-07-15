@@ -23,7 +23,7 @@ class FinishLine(Body):
 
 degree = math.radians(2)
 class Car(Body):
-    def __init__(self, position, angle, id, raceTrack, speed=0.1, size=(20,30), steermax=degree):
+    def __init__(self, position, angle, id, raceTrack, speed=0.1, size=(20,30), steermax=degree, radar_range=400):
         self.id = id
         w, l = size
         vs = [(0, -w/2), (w, -w/2), (l, 0), (w, w/2), (0, w/2)]
@@ -39,7 +39,7 @@ class Car(Body):
         
         self.angle = angle
         self.position = position
-        self.sensors = list(self.createSensors(raceTrack))
+        self.sensors = list(self.createSensors(raceTrack, radar_range))
         self.nn = None
         self.steermax = steermax
 
@@ -54,10 +54,10 @@ class Car(Body):
             return self.__key__() == other.__key__()
         return NotImplemented
 
-    def createSensors(self, raceTrack):
-        sensorAngles = [60, 30, 0, -30, -60]
+    def createSensors(self, raceTrack, range):
+        sensorAngles = [45, 0, -45]
         for a in sensorAngles:
-            yield RadarSensor(self.position, math.radians(a), raceTrack)
+            yield RadarSensor(self.position, math.radians(a), raceTrack, range=range)
 
     def move(self):
         if not self.can_run:
@@ -91,7 +91,7 @@ class Car(Body):
         self.nn = nn
 
     def get_scaled_radar_distances(self)->List[float]:
-        return [x.get_distance() / x.range for x in self.sensors]
+        return [x.get_distance() / x.range - 0.5 for x in self.sensors]
 
 class RaceTrack:
     def __init__(self, size=(1000, 500), starting_point=(0,0), starting_angle=0):
@@ -117,8 +117,8 @@ class RaceTrack:
     def addCar(self, car):
         self.cars.append(car)
         car.position = self.starting_point
-        if car.id in self.running_car_ids:
-            raise Exception('Cannot add cars with same IDs')
+        """ if car.id in self.running_car_ids:
+            raise Exception('Cannot add cars with same IDs') """
         self.running_car_ids.add(car.id)
 
     def addSelfToSpace(self, space:Space):
@@ -227,7 +227,7 @@ class RaceTrack:
 
 
 class RadarSensor:
-    def __init__(self, rootPosition, angle, raceTrack, range=300):
+    def __init__(self, rootPosition, angle, raceTrack, range=400):
         self.range = range
         self._angle = angle
         self._root = Vec2d(rootPosition)
