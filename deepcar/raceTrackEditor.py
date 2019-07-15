@@ -11,8 +11,8 @@ X, Y = 0, 1
 
 def getArgParse()->argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description='UI to create race track.')
-    parser.add_argument('w', type=int, help='width of the race track')
-    parser.add_argument('h', type=int, help='width of the race track')
+    parser.add_argument('--w', type=int, help='width of the race track', default=1500)
+    parser.add_argument('--h', type=int, help='width of the race track', default=800)
     return parser
 
 def main():
