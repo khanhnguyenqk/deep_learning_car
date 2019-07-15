@@ -14,10 +14,12 @@ def main():
     DRAW_SENSORS = True
     LAP_CNT = 1000
     CAR_SPEED = 0.6
-    CAR_STEER_MAX = math.radians(24)
-    RADAR_RANGE = 500
+    CAR_STEER_MAX = math.radians(30)
+    CAR_SENSOR_ANGLES = [-60, -30, 30, 60]
+    RADAR_RANGE = 400
     NN_MUTATION_PROB_MIN = 0.01
-    NN_MUTATION_PROB_MAX = 0.06
+    NN_MUTATION_PROB_MAX = 0.05
+    NN_HIDDEN_LAYERS = [8, 8]
 
     # Put window at position (0, 0) of the monitor
     os.environ['SDL_VIDEO_WINDOW_POS'] = "10,10"
@@ -43,8 +45,8 @@ def main():
         # Add cars and NNs
         if lap == 0:
             for i in range(CARS_PER_LAP):
-                car = Car((100, 150), 0, i, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX, radar_range=RADAR_RANGE)
-                nn = NN(len(car.sensors), 2, [8, 8])
+                car = Car((0, 0), 0, i, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX, radar_range=RADAR_RANGE, sensor_angles=CAR_SENSOR_ANGLES)
+                nn = NN(len(car.sensors), 2, NN_HIDDEN_LAYERS)
                 nn.randomize_weights_biases()
                 car.assign_nn(nn)
                 raceTrack.addCar(car)
@@ -58,12 +60,10 @@ def main():
             for i in range(CARS_PER_LAP):
                 new_nn = nn.deep_copy()
                 new_nn.mutate_randomly(intensity=1-fit_score, min_prob=NN_MUTATION_PROB_MIN, max_prob=NN_MUTATION_PROB_MAX)
-                car = Car((100, 150), 0, i, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX)
+                car = Car((0, 0), 0, i, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX, radar_range=RADAR_RANGE, sensor_angles=CAR_SENSOR_ANGLES)
                 car.assign_nn(new_nn)
                 raceTrack.addCar(car)
-            """ car = Car((100, 150), 0, i+1, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX)
-            car.assign_nn(nn)
-            raceTrack.addCar(car) """
+                
         raceTrack.init_race()
 
         quit = False
@@ -85,7 +85,7 @@ def main():
 
             # Draw cars' radar sensors
             if DRAW_SENSORS:
-                sensors = [s for c in raceTrack.cars for s in c.sensors]
+                sensors = [s for c in raceTrack.cars for s in c.sensors if c.can_run]
                 radarPoints = [tuple(s.point) for s in sensors if s.point]
                 for p in radarPoints:
                     p = int(round(p[0])), raceTrack.size[1]-int(round(p[1]))

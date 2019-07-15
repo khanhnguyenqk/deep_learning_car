@@ -23,7 +23,7 @@ class FinishLine(Body):
 
 degree = math.radians(2)
 class Car(Body):
-    def __init__(self, position, angle, id, raceTrack, speed=0.1, size=(20,30), steermax=degree, radar_range=400):
+    def __init__(self, position, angle, id, raceTrack, speed=0.1, size=(20,30), steermax=degree, radar_range=400, sensor_angles=[30, -30]):
         self.id = id
         w, l = size
         vs = [(0, -w/2), (w, -w/2), (l, 0), (w, w/2), (0, w/2)]
@@ -39,7 +39,9 @@ class Car(Body):
         
         self.angle = angle
         self.position = position
-        self.sensors = list(self.createSensors(raceTrack, radar_range))
+        self.sensor_angles = sensor_angles
+        self.radar_range = radar_range
+        self.sensors = list(self.createSensors(raceTrack))
         self.nn = None
         self.steermax = steermax
 
@@ -54,10 +56,9 @@ class Car(Body):
             return self.__key__() == other.__key__()
         return NotImplemented
 
-    def createSensors(self, raceTrack, range):
-        sensorAngles = [60, 30, -30, -60]
-        for a in sensorAngles:
-            yield RadarSensor(self.position, math.radians(a), raceTrack, range=range)
+    def createSensors(self, raceTrack):
+        for a in self.sensor_angles:
+            yield RadarSensor(self.position, math.radians(a), raceTrack, range=self.radar_range)
 
     def move(self):
         if not self.can_run:
@@ -117,6 +118,7 @@ class RaceTrack:
     def addCar(self, car):
         self.cars.append(car)
         car.position = self.starting_point
+        car.angle = self.starting_angle
         """ if car.id in self.running_car_ids:
             raise Exception('Cannot add cars with same IDs') """
         self.running_car_ids.add(car.id)
