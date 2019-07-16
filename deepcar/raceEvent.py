@@ -1,5 +1,5 @@
 from objects import Car, RaceTrack, RadarSensor
-from neural_network import NN
+from neural_network import NN, NNTorch
 import os, sys
 import pygame
 from pygame.locals import *
@@ -46,7 +46,7 @@ def main():
         if lap == 0:
             for i in range(CARS_PER_LAP):
                 car = Car((0, 0), 0, i, raceTrack, size=(10, 15), speed=CAR_SPEED, steermax=CAR_STEER_MAX, radar_range=RADAR_RANGE, sensor_angles=CAR_SENSOR_ANGLES)
-                nn = NN(len(car.sensors), 2, NN_HIDDEN_LAYERS)
+                nn = NNTorch(len(car.sensors), 2, NN_HIDDEN_LAYERS)
                 nn.randomize_weights_biases()
                 car.assign_nn(nn)
                 raceTrack.addCar(car)
