@@ -31,7 +31,9 @@ class NNTorch:
                 modules.append(nn.Sigmoid())
 
         modules.append(nn.Softmax(dim=0))
-        return nn.Sequential(*modules)
+        model = nn.Sequential(*modules)
+        model.to(DEVICE)
+        return model
 
     def randomize_weights_biases(self, seed=None):
         if seed:
@@ -141,6 +143,6 @@ def _test_deep_copy():
     print(copy.model[0].weight.data)
 
 if __name__ == '__main__':
-    _test_deep_copy()
-    #_test_forward_no_exception()
+    #_test_deep_copy()
+    _test_forward_no_exception()
     #_test_mutate_with_probs()
