@@ -21,7 +21,7 @@ def main():
     NN_MUTATION_PROB_MAX = 0.05
     NN_HIDDEN_LAYERS = [8, 8]
     USE_PYTORCH = True
-    LOAD_NN_FP = True
+    LOAD_NN_FP = False
 
     # Put window at position (0, 0) of the monitor
     os.environ['SDL_VIDEO_WINDOW_POS'] = "10,10"
@@ -130,7 +130,7 @@ e: serialize current best car to disk
 space: pause
 
 Pytorch: {USE_PYTORCH}
-Lap: {lap}'''
+Lap (generation): {lap}'''
             y = 5
             for line in text.splitlines():
                 text = font.render(line, 1,THECOLORS["black"])
