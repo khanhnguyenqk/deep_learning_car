@@ -1,2 +1,1 @@
-from .nn import NN
-from .nn_torch import NNTorch
+from .nn import NN, NNTorch
