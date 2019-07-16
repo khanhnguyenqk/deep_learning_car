@@ -109,9 +109,11 @@ class NNNumpy(NN):
         if len(xs) != self.x_cnt:
             raise Exception(f'This NN only accepts input of size {self.x_cnt}')
         output = np.asarray(xs)
-        for hidden in self.hiddens:
+        for i, hidden in enumerate(self.hiddens):
             output = np.append(output, [1])
-            output = NNNumpy.sigmoid(np.dot(output, hidden))
+            output = np.dot(output, hidden)
+            if i != len(self.hiddens) - 1:
+                output = NNNumpy.sigmoid(output)
         output = NNNumpy.softmax(output)
         return output.tolist()
 
