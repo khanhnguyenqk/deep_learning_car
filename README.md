@@ -14,3 +14,5 @@ To create a new race track, call
   ```python ./deepcar/raceTrackEditor.py```
 	
 Execute ```raceTrackEditor.py``` with ```-h``` option for more information.
+
+[alt text](https://github.com/khanhnguyenqk/deep_learning_car/blob/master/screenshots/capture.png)
