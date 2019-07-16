@@ -1,1 +1,1 @@
-from .nn import NN, NNTorch
+from .nn import NNNumpy, NNTorch, NNLoader

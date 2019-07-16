@@ -125,7 +125,7 @@ class NNNumpy(NN):
         '''
         Return a deep copy of self
         '''
-        copy = NN(self.x_cnt, self.y_cnt, list(self.hidden_cnts))
+        copy = NNNumpy(self.x_cnt, self.y_cnt, list(self.hidden_cnts))
         copy.hiddens = [np.copy(h) for h in self.hiddens]
         return copy
 
