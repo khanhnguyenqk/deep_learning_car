@@ -44,6 +44,8 @@ class Car(Body):
         self.sensors = list(self.createSensors(raceTrack))
         self.nn = None
         self.steermax = steermax
+        self.last_move_pass_line = 0 # everytime car moves, this number decreases. If passes a line, reset back to zero
+        self.last_line_id = -1
 
     def __key__(self):
         return self.id
@@ -60,9 +62,15 @@ class Car(Body):
         for a in self.sensor_angles:
             yield RadarSensor(self.position, math.radians(a), raceTrack, range=self.radar_range)
 
-    def move(self):
+    def move(self, kill_if_have_not_crossed_line=500):
+        if -self.last_move_pass_line > kill_if_have_not_crossed_line:
+            self.can_run = False
+
         if not self.can_run:
             return
+
+        self.last_move_pass_line -= 1
+        
         if self.nn:
             xs = self.get_scaled_radar_distances()
             ys = self.nn.forward(xs)
@@ -74,6 +82,11 @@ class Car(Body):
         self.position += impulse
         for sensor in self.sensors:
             sensor.root = self.position
+    
+    def crossed_line(self, line_id):
+        if line_id > self.last_line_id:
+            self.last_move_pass_line = 0
+            self.last_line_id = line_id
 
     def steered(self, delta_angle):
         if not self.can_run:
@@ -179,6 +192,8 @@ class RaceTrack:
         if not isinstance(line, FinishLine) or not isinstance(car, Car):
             return
         
+        car.crossed_line(line.id)
+
         if line.id > self.best_line_crossed:
             self.best_line_crossed = line.id
             self.best_cars = {car}
@@ -195,7 +210,6 @@ class RaceTrack:
         
         if car.id in self.running_car_ids:
             car.can_run = False
-            self.running_car_ids.remove(car.id)
         return False
 
     def step(self)->None:
@@ -205,7 +219,11 @@ class RaceTrack:
             - Calculate other metrics
         '''
         for car in self.cars:
-            car.move()
+            if not car.can_run:
+                if car.id in self.running_car_ids:
+                    self.running_car_ids.remove(car.id)
+            else:
+                car.move()
         
 
     @staticmethod
