@@ -20,8 +20,8 @@ def main():
     NN_MUTATION_PROB_MIN = 0.01
     NN_MUTATION_PROB_MAX = 0.05
     NN_HIDDEN_LAYERS = [8, 8]
-    USE_PYTORCH = False
-    LOAD_NN_FP = False
+    USE_PYTORCH = True
+    LOAD_NN_FP = True
 
     # Put window at position (0, 0) of the monitor
     os.environ['SDL_VIDEO_WINDOW_POS'] = "10,10"
