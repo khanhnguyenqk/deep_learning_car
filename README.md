@@ -15,4 +15,4 @@ To create a new race track, call
 	
 Execute ```raceTrackEditor.py``` with ```-h``` option for more information.
 
-[alt text](https://github.com/khanhnguyenqk/deep_learning_car/blob/master/screenshots/capture.png)
+![Screenshot](https://github.com/khanhnguyenqk/deep_learning_car/blob/master/screenshots/capture.png)
